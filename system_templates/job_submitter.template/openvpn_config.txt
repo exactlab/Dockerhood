@@ -1,0 +1,64 @@
+# Specify that we are a client and that we
+# will be pulling certain config file directives
+# from the server.
+client
+
+# Use the same setting as you are using on
+# the server.
+# On most systems, the VPN will not function
+# unless you partially or fully disable
+# the firewall for the TUN/TAP interface.
+dev tap
+
+# Are we connecting to a TCP or
+# UDP server?  Use the same setting as
+# on the server.
+proto tcp
+
+# The hostname/IP and port of the server.
+# You can have multiple remote entries
+# to load balance between the servers.
+remote {{LINKER_IP}} {{STATIC_NETWORK_PORT}}
+
+# Keep trying indefinitely to resolve the
+# host name of the OpenVPN server.  Very useful
+# on machines which are not permanently connected
+# to the internet such as laptops.
+resolv-retry infinite
+
+# Most clients don't need to bind to
+# a specific local port number.
+nobind
+
+# Downgrade privileges after initialization (non-Windows only)
+user nobody
+group nogroup
+
+# Try to preserve some state across restarts.
+persist-key
+persist-tun
+
+# SSL/TLS parms.
+ca /etc/openvpn/ca.crt
+cert /etc/openvpn/linker-client.crt
+key /etc/openvpn/linker-client.key
+
+# If a tls-auth key is used on the server
+# then every client must also have the key.
+tls-auth /etc/openvpn/ta.key 1
+
+# Enable compression on the VPN link.
+# Don't enable this unless it is also
+# enabled in the server config file.
+comp-lzo
+
+# Set log file verbosity.
+verb 3
+
+# Silence repeating messages
+;mute 20
+
+# Configure the network
+ifconfig {{JOB_SUBMITTER_IP}} 255.255.255.0
+
+

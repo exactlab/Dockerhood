@@ -1,0 +1,91 @@
+# The port where openvpn will be listen to
+port {{q.port}}
+
+# TCP or UDP server?
+proto tcp
+
+# Use tun or tap interface (Read the openvpn documentation
+# for the difference, but tun interface are somehow less
+# powerful but easier to configure)
+dev tun
+
+# The connection certificates
+ca /etc/openvpn/ca.crt
+cert /etc/openvpn/linker.crt
+key /etc/openvpn/linker.key
+
+# Diffie hellman parameters.
+dh /etc/openvpn/dh2048.pem
+
+# Network topology
+topology subnet
+
+# Configure server mode and supply a VPN subnet
+server {{q.subnet}} 255.255.255.0
+
+# Maintain a record of client <-> virtual IP address
+# associations in this file.  If OpenVPN goes down or
+# is restarted, reconnecting clients can be assigned
+# the same virtual IP address from the pool that was
+# previously assigned.
+ifconfig-pool-persist ipp.txt
+
+# This directive allows different clients
+# to be able to "see" each other.
+# By default, clients will only see the server.
+client-to-client
+
+# Uncomment this directive if multiple clients
+# might connect with the same certificate/key
+# files or common names.
+duplicate-cn
+
+# The keepalive directive causes ping-like
+# messages to be sent back and forth over
+# the link so that each side knows when
+# the other side has gone down.
+# Ping every 10 seconds, assume that remote
+# peer is down if no ping received during
+# a 120 second time period.
+keepalive 10 120
+
+# The server and each client must have
+# a copy of this key.
+# The second parameter should be '0'
+# on the server and '1' on the clients.
+tls-auth /etc/openvpn/ta.key 0
+
+# Enable compression on the VPN link.
+# If you enable it here, you must also
+# enable it in the client config file.
+comp-lzo
+
+# The maximum number of concurrently connected
+# clients we want to allow.
+max-clients 255
+
+# It's a good idea to reduce the OpenVPN
+# daemon's privileges after initialization.
+user nobody
+group nogroup
+
+# The persist options will try to avoid
+# accessing certain resources on restart
+# that may no longer be accessible because
+# of the privilege downgrade.
+persist-key
+persist-tun
+
+# Output a short status file showing
+# current connections, truncated
+# and rewritten every minute.
+status openvpn-status.log
+
+# Set the appropriate level of log
+# file verbosity.(0 silent, 9 verbose)
+verb 3
+
+# Silence repeating messages.  At most 20
+# sequential messages of the same message
+# category will be output to the log.
+mute 20

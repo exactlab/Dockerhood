@@ -1,0 +1,23 @@
+ControlMachine=slurm-master
+ControlAddr={{SLURM_MASTER_IP}}
+
+MpiDefault=none
+ProctrackType=proctrack/pgid
+ReturnToService=2
+SlurmctldPidFile=/var/run/slurmctld.pid
+SlurmdPidFile=/var/run/slurmd.pid
+SlurmdSpoolDir=/var/lib/slurm-llnl/slurmd
+SlurmUser=slurm
+StateSaveLocation=/var/lib/slurm-llnl/slurmctld
+SwitchType=switch/none
+TaskPlugin=task/none
+
+# SCHEDULING
+FastSchedule=0
+SchedulerType=sched/backfill
+SelectType=select/linear
+
+# LOGGING AND ACCOUNTING
+AccountingStorageType=accounting_storage/none
+ClusterName=cluster
+JobAcctGatherType=jobacct_gather/none
